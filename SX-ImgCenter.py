@@ -79,7 +79,6 @@ class icmain:
                 else:
                     self.fc.loginmysqlcount = 0
             else:
-                #print 'getImg()'
                 self.fc.getImg()
             self.fc.imgcount += 1
 
@@ -120,6 +119,7 @@ class MainWindow(QtGui.QMainWindow):
         self.root = QtGui.QTreeWidgetItem(self.tree)
         self.root.setText(0,'State')
 
+        self.count = 0
         self.ipdict = {}
         self.statelist = [('off',QtGui.QColor(255,0,0)),('on',QtGui.QColor(0,200,50))]
         self.statedict = {0:(self.statelist[0],self.statelist[0]),2:(self.statelist[0],self.statelist[1]),4:(self.statelist[1],self.statelist[0]),6:(self.statelist[1],self.statelist[1])}
@@ -129,6 +129,7 @@ class MainWindow(QtGui.QMainWindow):
         self.setCentralWidget(self.tree) 
         
         self.text_area = QtGui.QTextBrowser()
+        #print 'QtGui.QTextBrowser()',help(QtGui.QTextBrowser())
         self.text_area.setMinimumWidth(500)
         self.text_area.setMinimumHeight(400)
  
@@ -155,7 +156,7 @@ class MainWindow(QtGui.QMainWindow):
         
         #self.setGeometry(300, 300, 250, 150)
         #self.setWindowTitle('Icon')
-        self.setWindowIcon(QtGui.QIcon('icons/logo2.png'))
+        self.setWindowIcon(QtGui.QIcon('icons/logo3.png'))
         
         self.start_threads()
         
@@ -183,6 +184,10 @@ class MainWindow(QtGui.QMainWindow):
     def update_text(self, message,m_type):
         if m_type == 1:
             self.text_area.append(unicode(message, 'gbk'))
+            self.count += 1
+            if self.count >1000:
+                self.text_area.clear()
+                self.count = 0
         else:
             #print 'm_type',m_type,'message',message
             if self.ipdict.get(message,0) == 0:
@@ -198,11 +203,11 @@ class MainWindow(QtGui.QMainWindow):
 
  
 if __name__ == '__main__':
-##    myapp = singleinstance3()
-##    if myapp.aleradyrunning():
-##        print version(),'已经启动!3秒后自动退出...'
-##        time.sleep(3)
-##        sys.exit(0)
+    myapp = singleinstance3()
+    if myapp.aleradyrunning():
+        print version(),'已经启动!3秒后自动退出...'
+        time.sleep(3)
+        sys.exit(0)
         
     app = QtGui.QApplication(sys.argv)
  

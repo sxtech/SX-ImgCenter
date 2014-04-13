@@ -139,18 +139,19 @@ class FtpCenter:
             for i in ftp_host:
                 try:
                     self.singal.wait(1)
-                    self.trigger.emit("<font %s>%s</font>"%(self.style_green,getTime()+'Start to connect ftp '+i),1)
+                    #self.trigger.emit("<font %s>%s</font>"%(self.style_green,getTime()+'Start to connect ftp '+i),1)
                     self.ftplosthost_dict[i].login()
-                    self.trigger        #print 'self.activedisk',self.activedisk
-        #print self.diskstate.disk_state.emit("<font %s>%s</font>"%(self.style_green,getTime()+'Connect ftp success! '+i),1)
+                    self.trigger
+                    #print 'self.activedisk',self.activedisk
+                    #print self.diskstate.disk_state.emit("<font %s>%s</font>"%(self.style_green,getTime()+'Connect ftp success! '+i),1)
                     self.ftphost_dict[i]=self.ftplosthost_dict[i]
                     del(self.ftplosthost_dict[i])
                     self.singal.set()
                 except ftplib.all_errors,e:
-                    self.trigger.emit("<font %s>%s</font>"%(self.style_red,getTime()+str(e)),1)
+                    #self.trigger.emit("<font %s>%s</font>"%(self.style_red,getTime()+str(e)),1)
                     logging.exception(e)
                 except Exception,e:
-                    self.trigger.emit("<font %s>%s</font>"%(self.style_red,getTime()+str(e)),1)
+                    #self.trigger.emit("<font %s>%s</font>"%(self.style_red,getTime()+str(e)),1)
                     logging.exception(e)
 
     def setDisk(self):
