@@ -107,7 +107,7 @@ class icmain:
 class MainWindow(QtGui.QMainWindow):
     def __init__(self, parent=None):  
         super(MainWindow, self).__init__(parent)
-        self.resize(750, 450)
+        self.resize(850, 450)
         self.setWindowTitle(version())
 
         self.tree = QtGui.QTreeWidget()
@@ -129,7 +129,7 @@ class MainWindow(QtGui.QMainWindow):
         self.setCentralWidget(self.tree) 
         
         self.text_area = QtGui.QTextBrowser()
-        self.text_area.setMinimumWidth(500)
+        self.text_area.setMinimumWidth(600)
         self.text_area.setMinimumHeight(400)
  
         central_widget = QtGui.QWidget()

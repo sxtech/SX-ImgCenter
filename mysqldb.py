@@ -108,31 +108,6 @@ class ImgMysql:
             self.conn.commit()
             return s
 
-##    #main
-##    def setNewFlagTime(self):
-##        try:
-##            #s = self.getLastFlagTime()
-##            self.cur.execute("select captime from indexcenter where iniflag='0' and captime>=%s ORDER BY captime limit 0,1",self.initime)
-##            new_initime = self.cur.fetchone()
-##            self.conn.commit()
-##
-##            self.cur.execute("select captime from indexcenter where imgflag=0 and captime>=%s ORDER BY captime limit 0,1",self.imgtime)
-##            new_imgtime = self.cur.fetchone()
-##            self.conn.commit()
-##
-##            if new_initime==None:
-##                new_initime={}
-##                new_initime['captime']=self.initime
-##            if new_imgtime==None:
-##                new_imgtime={}
-##                new_imgtime['captime']=self.imgtime
-##            self.cur.execute("update timeflag set initime=%s,imgtime=%s where id=1",(new_initime['captime'],new_imgtime['captime']))
-##            self.conn.commit()
-##        except MySQLdb.Error,e:
-##            raise
-##        else:
-##            self.initime=new_initime['captime'] - datetime.timedelta(minutes = 1)
-##            self.imgtime=new_imgtime['captime'] - datetime.timedelta(minutes = 1)
 
     def setNewIniTime(self):
         try:
@@ -230,31 +205,6 @@ class ImgMysql:
             self.conn.commit()
             return s
         
-    def getImgInfoByIP(self,limit=10,ip=''):
-        try:
-            if ip == '':
-                strip = ''
-            else:
-                strip = "and pcip='%s'"%ip
-            self.cur.execute("select id,pcip,inifile,imgpath,iniflag from indexcenter where imgflag = 0 and iniflag in ('D','E','F','G','H','I','J','K') %s order by passdatetime desc limit 0,%s"%(strip,limit))
-            s = self.cur.fetchall()
-        except MySQLdb.Error,e:
-            raise
-        else:
-            self.conn.commit()
-            return s
-
-    #main
-##    def getImgInfoByIPList2(self,limit=10,ip=[]):
-##        try:
-##            strip = "','".join(ip)
-##            self.cur.execute("select id,pcip,inifile,imgpath,iniflag from indexcenter where imgflag = 0 and iniflag in ('D','E','F','G','H','I','J','K') and pcip in('%s') and passdatetime>='%s' order by passdatetime desc limit 0,%s"%(strip,self.imgtime,limit))
-##            s = self.cur.fetchall()
-##        except MySQLdb.Error,e:
-##            raise
-##        else:
-##            self.conn.commit()
-##            return s
     #main
     def getImgInfoByIPList(self,limit=10,ip=[]):
         try:
@@ -323,10 +273,8 @@ class ImgMysql:
         try:
             self.cur.execute("update indexcenter set iniflag='1' where id=%s",index_id)
         except MySQLdb.Error,e:
-            #print 'MySQLdb.Error',e
             return False
             self.conn.rollback()
-            #print 'rollback()'
             raise
 
     def flagManyIniIndex2(self,index_id,disk):
@@ -339,31 +287,16 @@ class ImgMysql:
             raise
             
     def endOfCur(self):
-        #print 'commit and close'
         self.conn.commit()
         
     def sqlCommit(self):
-        #print 'sql commit'
         self.conn.commit()
         
     def sqlRollback(self):
         self.conn.rollback()
 
     #main
-    def getPlateInfo(self,limit=20):
-        try:
-            if self.imgtime == None:
-                self.getLastFlagTime()
-            self.cur.execute("select * from indexcenter where iniflag='0' and captime>=%s ORDER BY passdatetime DESC limit 0,%s",(self.initime,limit))
-            s = self.cur.fetchall()
-        except MySQLdb.Error,e:
-            #print e
-            raise
-        else:
-            self.conn.commit()
-            return s
-
-    def getPlateInfo2(self,limit=10):
+    def getPlateInfo(self,limit=10):
         try:
             if self.imgtime == None:
                 self.getLastFlagTime()

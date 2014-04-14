@@ -191,7 +191,6 @@ class FtpCenter:
         try:
             imgpath = self.imgMysql.getImgInfoByIPList(5,self.ftphost_dict.keys())
             num = len(imgpath)
-            i = {}
             if num>0:
                 for i in imgpath:
                     remotepath = os.path.splitext(i['inifile'])[0]+'.jpg'
@@ -201,7 +200,7 @@ class FtpCenter:
                             if ftpclient.downloadfile(remotepath.encode('gbk'),i['imgpath'].encode('gbk'),i['disk'].encode('gbk')):
                                 self.imgMysql.flagImgIndex(i['id'])
                         except IOError,e:
-                            self.trigger.emit("<font %s>%s</font>"%(self.style_red,getTime()+str(e)))
+                            self.trigger.emit("<font %s>%s</font>"%(self.style_red,getTime()+str(e)),1)
                             if e[0] == 2:
                                 ftpclient.makedirs()
     ##                        else:
@@ -209,7 +208,7 @@ class FtpCenter:
     ##                            del(self.ftphost_dict[i['pcip']])
                             logging.exception(e)
                         except ftplib.all_errors,e:
-                            self.trigger.emit("<font %s>%s</font>"%(self.style_red,getTime()+str(e)))
+                            self.trigger.emit("<font %s>%s</font>"%(self.style_red,getTime()+str(e)),1)
                             if str(e) == '550 File not found':
                                 self.imgMysql.flagImgIndex(i['id'],2)
                             else:
@@ -218,8 +217,10 @@ class FtpCenter:
                                 del(self.ftphost_dict[i['pcip']])
                                 self.singal.set()
                             logging.exception(e)
-                    carstr =  '%s %s %s | %s | %s | %s车道 | IP:%s'%(getTime(),i['platecode'].encode("gbk"),i['platecolor'].encode("gbk"),i['roadname'].encode("gbk"),self.direction.get(i['directionid'],u'其他').encode("gbk"),i['channelid'].encode("gbk"),i['pcip'].encode("gbk"),0)
-                    self.trigger.emit("<font %s>%s</font>"%(self.style_blue,carstr),1)
+                #carstr =  '%s %s %s | %s | %s | %s车道 | IP:%s'%(getTime(),i['platecode'].encode("gbk"),i['platecolor'].encode("gbk"),i['roadname'].encode("gbk"),self.direction.get(i['directionid'],u'其他').encode("gbk"),i['channelid'].encode("gbk"),i['pcip'].encode("gbk"),0)
+                carstr = '<table><tr style="font-family:arial;font-size:14px;color:blue"><td>%s<td><td width="100">%s</td><td width="40">%s</td><td width="160">%s</td><td width="70">%s</td><td width="40">%s车道</td></tr></table>'%(getTime(),imgpath[-1]['platecode'].encode("gbk"),imgpath[-1]['platecolor'].encode("gbk"),imgpath[-1]['roadname'].encode("gbk"),self.direction.get(imgpath[-1]['directionid'],u'其他').encode("gbk"),imgpath[-1]['channelid'].encode("gbk"))
+                self.trigger.emit("%s"%carstr,1)
+                #self.trigger.emit("<font %s>%s</font>"%(self.style_blue,carstr),1)
             else:
                 if self.imgcount%120==0:
                     self.imgcount = 1
