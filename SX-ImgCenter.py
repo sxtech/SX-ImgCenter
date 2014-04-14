@@ -27,7 +27,7 @@ def initLogging(logFilename):
                     filemode = 'a');
 
 def version():
-    return 'SX-ImgCenter V0.2.0'
+    return 'SX-ImgCenter V0.2.2'
 
  
 class MyThread(QtCore.QThread):
@@ -129,7 +129,6 @@ class MainWindow(QtGui.QMainWindow):
         self.setCentralWidget(self.tree) 
         
         self.text_area = QtGui.QTextBrowser()
-        #print 'QtGui.QTextBrowser()',help(QtGui.QTextBrowser())
         self.text_area.setMinimumWidth(500)
         self.text_area.setMinimumHeight(400)
  

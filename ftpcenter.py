@@ -14,8 +14,8 @@ from disk import DiskState
 def getTime():
     return datetime.datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
 
-def version():
-    return 'SX-ftpcenter V0.2.3'
+##def version():
+##    return 'SX-ftpcenter V0.2.3'
 
 def initLogging(logFilename):
     """Init for logging"""
@@ -132,6 +132,18 @@ class FtpCenter:
             self.trigger.emit("<font %s>%s</font>"%(self.style_red,getTime()+str(e)),1)
             logging.exception(e)
 
+    def setNewImgTime(self):
+        try:
+            self.imgMysql.setNewImgTime()
+        except MySQLdb.Error,e:
+            self.trigger.emit("<font %s>%s</font>"%(self.style_red,getTime()+str(e)),1)
+            logging.exception(e)
+            self.loginmysqlflag = True
+            self.loginmysqlcount = 0
+        except Exception,e:
+            self.trigger.emit("<font %s>%s</font>"%(self.style_red,getTime()+str(e)),1)
+            logging.exception(e)
+            
     def checkFtp(self):
         ftp_host = self.ftplosthost_dict.keys()
 
@@ -213,13 +225,14 @@ class FtpCenter:
                     self.imgcount = 1
                     self.getNewIP()
                     self.getIPState()
-                    #self.checkDisk()
+                    self.setNewImgTime()
                 time.sleep(0.125)
                 
             if self.imgcount%120==0:
                 self.imgcount = 1
                 self.getNewIP()
                 self.getIPState()
+                self.setNewImgTime()
                 #self.checkDisk()
         except MySQLdb.Error,e:
             self.trigger.emit("<font %s>%s</font>"%(self.style_red,getTime()+str(e)),1)
